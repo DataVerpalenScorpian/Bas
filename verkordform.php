@@ -2,14 +2,14 @@
 <html>
 <body>
 
-	<h1>Klant</h1>
+	<h1>Verkooporder</h1>
 	<h2>Toevoegen</h2>
-	<form method="post" action="">
+	<form method="post" action="inserverkord.php">
         <br>   
-    <label for="an">Verkorddatum:</label>
+    <label for="an">Verkooporderddatum:</label>
     <input type="text" id="" name="verkorddatum" placeholder="verkorddatum" required/>
         <br>
-    <label for="an">Verkordbestaantal:</label>
+    <label for="an">Verkordbestelaantal:</label>
     <input type="text" id="" name="verkordbestaantal" placeholder="verkordbestaantal" required/>
         <br>
     <label for="an">Verkordstatus:</label>
