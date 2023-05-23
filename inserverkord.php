@@ -13,7 +13,7 @@ class Verkord {
             die("Kan geen verbinding maken met de database: " . $conn->connect_error);
         }
 
-        $sql = "INSERT INTO verkord (verkorddatum, verkordbestaantal, verkordstatus) VALUES ('$verkorddatum', '$verkordbestaantal', '$verkordstatus')";
+        $sql = "INSERT INTO verkooporders (verkorddatum, verkordbestaantal, verkordstatus) VALUES ('$verkorddatum', '$verkordbestaantal', '$verkordstatus')";
 
         if ($conn->query($sql) === TRUE) {
             $verkordid = $conn->insert_id; // Haal het ingevoegde verkordid op
