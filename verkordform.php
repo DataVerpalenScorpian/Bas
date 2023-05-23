@@ -14,7 +14,8 @@
         <br>
     <label for="an">Verkordstatus:</label>
     <input type="text" id="" name="verkordstatus" placeholder="verkordstatus" required/>
-        <br>
+    <br><br>
+    <input type='submit' name='insert' value='Toevoegen'>
     </form></br>
 
 	<a href='index.php'>Terug</a>
