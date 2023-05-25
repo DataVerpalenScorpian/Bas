@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Verkooporder Formulier</title>
+    <link rel="stylesheet" type="text/css" href="cssbas.css" />
+</head>
 <body>
-
-	<h1>Verkooporder</h1>
-	<h2>Toevoegen</h2>
-	<form method="post" action="inserverkord.php">
-        <br>   
-    <label for="an">Verkooporderddatum:</label>
-    <input type="text" id="" name="verkorddatum" placeholder="verkorddatum" required/>
+    <h1>Verkooporder</h1>
+    <h2>Toevoegen</h2>
+    <form method="POST" action="inserverkord.php">
+        <label for="verkordid">Verkooporder ID:</label>
+        <input type="text" name="verkordid" id="verkordid" required>
         <br>
-    <label for="an">Verkordbestelaantal:</label>
-    <input type="text" id="" name="verkordbestaantal" placeholder="verkordbestaantal" required/>
+
+        <label for="artid">Artikel ID:</label>
+        <input type="text" name="artid" id="artid" required>
         <br>
-    <label for="an">Verkordstatus:</label>
-    <input type="text" id="" name="verkordstatus" placeholder="verkordstatus" required/>
-    <br><br>
-    <input type='submit' name='insert' value='Toevoegen'>
-    </form></br>
+        <label for="klantid">Klant ID:</label>
+        <input type="text" name="klantid" id="klantid" required>
+        <br>
+        <label for="verkorddatum">Verkooporder Datum:</label>
+        <input type="date" name="verkorddatum" id="verkorddatum" required>
+        <br>
+        <label for="verkordbestaantal">Verkooporder Aantal:</label>
+        <input type="number" name="verkordbestaantal" id="verkordbestaantal" required>
+        <br>
+        <label for="verkordstatus">Verkooporder Status:</label>
+        <input type="text" name="verkordstatus" id="verkordstatus" required>
 
-	<a href='index.php'>Terug</a>
-
+        <input type="submit" name="insert" value="Toevoegen">
+    </form>
 </body>
 </html>
-

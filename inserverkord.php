@@ -1,25 +1,37 @@
 <?php
 include 'conn.php';
 
-class Verkord {
+class Verkooporder {
     private $servername = "localhost";
     private $username = "root";
     private $password = "";
     private $dbname = "basdb";
 
-    public function insert($verkorddatum, $verkordbestaantal, $verkordstatus) {
+    public function insert($verkordid, $artid, $klantid, $verkorddatum, $verkordbestaantal, $verkordstatus) {
         $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
         if ($conn->connect_error) {
             die("Kan geen verbinding maken met de database: " . $conn->connect_error);
         }
 
-        $sql = "INSERT INTO verkooporders (verkorddatum, verkordbestaantal, verkordstatus) VALUES ('$verkorddatum', '$verkordbestaantal', '$verkordstatus')";
+        // Controleer op lege velden
+        if (empty($verkordid) || empty($artid) || empty($klantid) || empty($verkorddatum) || empty($verkordbestaantal) || empty($verkordstatus)) {
+            echo "Fout: Alle velden moeten worden ingevuld.";
+            return;
+        }
+
+        // Controleer of numerieke waarden correct zijn
+        if (!is_numeric($verkordid) || !is_numeric($artid) || !is_numeric($klantid) || !is_numeric($verkordbestaantal)) {
+            echo "Fout: Ongeldige numerieke waarden voor velden.";
+            return;
+        }
+
+        $sql = "INSERT INTO verkooporders (verkordid, artid, klantid, verkorddatum, verkordbestaantal, verkordstatus) VALUES ('$verkordid', '$artid', '$klantid', '$verkorddatum', '$verkordbestaantal', '$verkordstatus')";
 
         if ($conn->query($sql) === TRUE) {
             $verkordid = $conn->insert_id; // Haal het ingevoegde verkordid op
-            echo "Verkord succesvol toegevoegd. Verkord ID: " . $verkordid;
+            echo "Verkooporder succesvol toegevoegd. Verkooporder ID: " . $verkordid;
         } else {
-            echo "Fout bij het toevoegen van de verkord: " . $conn->error;
+            echo "Fout bij het toevoegen van de verkooporder: " . $conn->error;
         }
 
         $conn->close();
@@ -27,11 +39,14 @@ class Verkord {
 }
 
 if (isset($_POST['insert'])) {
-    $verkorddatum = $_POST['verkorddatum'];
-    $verkordbestaantal = $_POST['verkordbestaantal'];
-    $verkordstatus = $_POST['verkordstatus'];
+    $verkordid = $_POST['verkordid'] ?? '';
+    $artid = $_POST['artid'] ?? '';
+    $klantid = $_POST['klantid'] ?? '';
+    $verkorddatum = $_POST['verkorddatum'] ?? '';
+    $verkordbestaantal = $_POST['verkordbestaantal'] ?? '';
+    $verkordstatus = $_POST['verkordstatus'] ?? '';
 
-    $verkord = new Verkord();
-    $verkord->insert($verkorddatum, $verkordbestaantal, $verkordstatus);
+    $verkooporder = new Verkooporder();
+    $verkooporder->insert($verkordid, $artid, $klantid, $verkorddatum, $verkordbestaantal, $verkordstatus);
 }
 ?>
