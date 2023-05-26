@@ -1,28 +1,39 @@
 <?php
 include 'conn.php';
+include 'Config.php';
 
-class Klant {
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "";
-    private $dbname = "basdb";
+class KlantInsert extends Config {
 
     public function insert($klantnaam, $klantemail, $klantadres, $klantpostcode, $klantwoonplaats) {
-        $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-        if ($conn->connect_error) {
-            die("Kan geen verbinding maken met de database: " . $conn->connect_error);
+        $dsn = "mysql:host={$this->servername};dbname={$this->dbname}";
+        $username = $this->username;
+        $password = $this->password;
+
+        try {
+            $conn = new PDO($dsn, $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $sql = "INSERT INTO klanten (klantnaam, klantemail, klantadres, klantpostcode, klantwoonplaats) 
+                    VALUES (:klantnaam, :klantemail, :klantadres, :klantpostcode, :klantwoonplaats)";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':klantnaam', $klantnaam);
+            $stmt->bindParam(':klantemail', $klantemail);
+            $stmt->bindParam(':klantadres', $klantadres);
+            $stmt->bindParam(':klantpostcode', $klantpostcode);
+            $stmt->bindParam(':klantwoonplaats', $klantwoonplaats);
+
+            if ($stmt->execute()) {
+                $klantid = $conn->lastInsertId(); // Haal het ingevoegde klantid op
+                echo "Klant succesvol toegevoegd. Klant ID: " . $klantid;
+            } else {
+                echo "Fout bij het toevoegen van de klant: " . $stmt->errorInfo()[2];
+            }
+        } catch (PDOException $e) {
+            die("Kan geen verbinding maken met de database: " . $e->getMessage());
         }
 
-        $sql = "INSERT INTO klanten (klantnaam, klantemail, klantadres, klantpostcode, klantwoonplaats) VALUES ('$klantnaam', '$klantemail', '$klantadres', '$klantpostcode', '$klantwoonplaats')";
-
-        if ($conn->query($sql) === TRUE) {
-            $klantid = $conn->insert_id; // Haal het ingevoegde klantid op
-            echo "Klant succesvol toegevoegd. Klant ID: " . $klantid;
-        } else {
-            echo "Fout bij het toevoegen van de klant: " . $conn->error;
-        }
-
-        $conn->close();
+        $conn = null;
     }
 }
 
@@ -33,7 +44,7 @@ if (isset($_POST['insert'])) {
     $klantpostcode = $_POST['klantpostcode'];
     $klantwoonplaats = $_POST['klantwoonplaats'];
 
-    $klant = new Klant();
-    $klant->insert($klantnaam, $klantemail, $klantadres, $klantpostcode, $klantwoonplaats);
+    $klantInsert = new KlantInsert();
+    $klantInsert->insert($klantnaam, $klantemail, $klantadres, $klantpostcode, $klantwoonplaats);
 }
 ?>
