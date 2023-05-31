@@ -9,41 +9,52 @@ class Verkooporder extends Config {
         $this->conn = $conn;
     }
 
-    public function getVerkooporders() {
+    public function getVerkooporder($verkordid) {
         try {
-            $query = "SELECT verkordid, artid, klantid, verkorddatum, verkordbestaantal, verkordstatus FROM verkooporders";
+            $query = "SELECT verkordid, artid, klantid, verkorddatum, verkordbestaantal, verkordstatus FROM verkooporders WHERE verkordid = :verkordid";
             $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':verkordid', $verkordid);
             $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return $result;
         } catch(PDOException $e) {
-            echo "Fout bij het ophalen van verkooporders: " . $e->getMessage();
+            echo "Fout bij het ophalen van de verkooporder: " . $e->getMessage();
         }
     }
 }
 
+$verkordid = $_GET['verkordid'] ?? '';
 $verkooporder = new Verkooporder($conn);
-$verkooporders = $verkooporder->getVerkooporders();
 
-// Results
-foreach ($verkooporders as $order) {
-    echo "Verkooporder ID: " . $order['verkordid'] . "<br>";
-    echo "Artikel ID: " . $order['artid'] . "<br>";
-    echo "Klant ID: " . $order['klantid'] . "<br>";
-    echo "Verkoopdatum: " . $order['verkorddatum'] . "<br>";
-    echo "Besteld aantal: " . $order['verkordbestaantal'] . "<br>";
-    echo "Status: " . $order['verkordstatus'] . "<br>";
-    echo "<br>";
-    echo "<br>";
-    echo "<br>";
+// Zoekbalk logica
+if (isset($_POST['search'])) {
+    $verkordid = $_POST['verkordid'] ?? '';
+    $verkooporderData = $verkooporder->getVerkooporder($verkordid);
+
+    if ($verkooporderData) {
+        echo "Verkooporder ID: " . $verkooporderData['verkordid'] . "<br>";
+        echo "Artikel ID: " . $verkooporderData['artid'] . "<br>";
+        echo "Klant ID: " . $verkooporderData['klantid'] . "<br>";
+        echo "Verkoopdatum: " . $verkooporderData['verkorddatum'] . "<br>";
+        echo "Besteld aantal: " . $verkooporderData['verkordbestaantal'] . "<br>";
+        echo "Status: " . $verkooporderData['verkordstatus'] . "<br>";
+    } else {
+        echo "Verkooporder met ID $verkordid niet gevonden.";
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <body>
-	<a href='index.php'>Terug naar homepage</a>
+    <form method="POST" action="">
+        <input type="text" name="verkordid" placeholder="Verkooporder ID">
+        <input type="submit" name="search" value="Zoeken">
+    </form>
 
+    <br>
+
+    <a href='index.php'>Terug naar homepage</a>
 </body>
 </html>

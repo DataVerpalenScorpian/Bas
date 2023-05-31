@@ -1,30 +1,29 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Verkooporder toevoegen</title>
+</head>
 <body>
+    <h2>Verkooporder toevoegen</h2>
+    <form method="POST" action="insertverkoop.php">
+        <label for="artid">Artikel ID:</label>
+        <input type="text" name="artid" id="artid" required><br>
 
-	<h1>Klant</h1>
-	<h2>Toevoegen</h2>
-	<form method="post" action="insertklant.php">
-        <br>   
-    <label for="an">Klantnaam:</label>
-    <input type="text" id="" name="klantnaam" placeholder="klantnaam" required/>
-        <br>
-    <label for="an">Klantemail:</label>
-    <input type="text" id="" name="klantemail" placeholder="klantemail" required/>
-        <br>
-    <label for="an">Klantadres:</label>
-    <input type="text" id="" name="klantadres" placeholder="klantadres" required/>
-        <br>
-    <label for="an">Klantpostcode:</label>
-    <input type="text" id="rt" name="klantpostcode" placeholder="klantpostcode" required/>
-        <br>
-    <label for="an">Klantwoonplaats:</label>
-    <input type="text" id="" name="klantwoonplaats" placeholder="klantwoonplaats" required/>
-        <br><br>
-    <input type='submit' name='insert' value='Toevoegen'>
-    </form></br>
+        <label for="klantid">Klant ID:</label>
+        <input type="text" name="klantid" id="klantid" required><br>
 
-	<a href='index.php'>Terug</a>
+        <label for="verkorddatum">Verkoopdatum:</label>
+        <input type="date" name="verkorddatum" id="verkorddatum" required><br>
 
+        <label for="verkordbestaantal">Besteld aantal:</label>
+        <input type="number" name="verkordbestaantal" id="verkordbestaantal" required><br>
+
+        <label for="verkordstatus">Status:</label>
+        <input type="text" name="verkordstatus" id="verkordstatus" required><br>
+
+        <input type="submit" name="insert" value="Verkooporder toevoegen">
+    </form>
+    </br>
+	<a href='index.php'>Terug naar homepage</a>
 </body>
 </html>

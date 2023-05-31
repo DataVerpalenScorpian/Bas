@@ -5,43 +5,52 @@ include 'Config.php';
 class Verkooporder extends Config {
 
     public function insert($artid, $klantid, $verkorddatum, $verkordbestaantal, $verkordstatus) {
-        $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-        if ($conn->connect_error) {
-            die("Kan geen verbinding maken met de database: " . $conn->connect_error);
-        }
-
-        // Controleer op lege velden
-        if (empty($artid) || empty($klantid) || empty($verkorddatum) || empty($verkordbestaantal) || empty($verkordstatus)) {
-            echo "Fout: Alle velden moeten worden ingevuld.";
-            return;
-        }
-
-        // Controleer of numerieke waarden correct zijn
-        if (!is_numeric($artid) || !is_numeric($klantid) || !is_numeric($verkordbestaantal)) {
-            echo "Fout: Ongeldige numerieke waarden voor velden.";
-            return;
-        }
-
-        $sql = "SELECT klantid FROM verkooporders WHERE klantid = '$klantid'";
-        $result = $conn->query($sql);
-        
-        if ($result->num_rows > 0) {
-            echo "Fout: Klant met ID $klantid bestaat al.";
-            return;
-        }
-
-        $sql = "INSERT INTO verkooporders (artid, klantid, verkorddatum, verkordbestaantal, verkordstatus) VALUES ('$artid', '$klantid', '$verkorddatum', '$verkordbestaantal', '$verkordstatus')";
-
+    
         try {
-            if ($conn->query($sql) === TRUE) {
-                $verkordid = $conn->insert_id; // Haal het ingevoegde verkordid op
+            $conn = new PDO("mysql:host=$this->servername;dbname=$this->dbname", $this->username, $this->password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Controleer op lege velden
+            if (empty($artid) || empty($klantid) || empty($verkorddatum) || empty($verkordbestaantal) || empty($verkordstatus)) {
+                echo "Fout: Alle velden moeten worden ingevuld.";
+                return;
+            }
+
+            // Controleer of numerieke waarden correct zijn
+            if (!is_numeric($artid) || !is_numeric($klantid) || !is_numeric($verkordbestaantal)) {
+                echo "Fout: Ongeldige numerieke waarden voor velden.";
+                return;
+            }
+
+            $sql = "SELECT klantid FROM verkooporders WHERE klantid = :klantid";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':klantid', $klantid);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                echo "Fout: Klant met ID $klantid bestaat al.";
+                return;
+            }
+
+            $sql = "INSERT INTO verkooporders (artid, klantid, verkorddatum, verkordbestaantal, verkordstatus) VALUES (:artid, :klantid, :verkorddatum, :verkordbestaantal, :verkordstatus)";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':artid', $artid);
+            $stmt->bindParam(':klantid', $klantid);
+            $stmt->bindParam(':verkorddatum', $verkorddatum);
+            $stmt->bindParam(':verkordbestaantal', $verkordbestaantal);
+            $stmt->bindParam(':verkordstatus', $verkordstatus);
+
+            if ($stmt->execute()) {
+                $verkordid = $conn->lastInsertId();
                 echo "Verkooporder succesvol toegevoegd. Verkooporder ID: " . $verkordid;
             } else {
-                echo "Fout bij het toevoegen van de verkooporder: " . $conn->error;
+                echo "Fout bij het toevoegen van de verkooporder: " . $stmt->errorInfo()[2];
             }
-        } catch (mysqli_sql_exception $e) {
+
+        } catch (PDOException $e) {
             // Handle duplicate entry error
-            if ($e->getCode() === 1062) {
+            if ($e->getCode() === '23000') {
                 echo "Fout: De verkooporder met het opgegeven artikel ID bestaat al.";
                 return;
             }
@@ -50,7 +59,7 @@ class Verkooporder extends Config {
             echo "Fout bij het toevoegen van de verkooporder: " . $e->getMessage();
         }
 
-        $conn->close();
+        $conn = null;
     }
 }
 
