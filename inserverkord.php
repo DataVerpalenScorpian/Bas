@@ -1,11 +1,8 @@
 <?php
 include 'conn.php';
+include 'Config.php';
 
-class Verkooporder {
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "";
-    private $dbname = "basdb";
+class Verkooporder extends Config {
 
     public function insert($verkordid, $artid, $klantid, $verkorddatum, $verkordbestaantal, $verkordstatus) {
         $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
