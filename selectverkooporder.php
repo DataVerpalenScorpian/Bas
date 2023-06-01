@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Verkooporder zoeken met behulp van de klantnaam</h1>
+</body>
+</html>
+
 <?php
 include 'conn.php';
 include 'Config.php';
@@ -9,84 +16,106 @@ class Verkooporder extends Config {
         $this->conn = $conn;
     }
 
-    public function getVerkooporder($verkordid) {
+    public function getVerkoopordersByKlantId($klantid) {
         try {
-            $query = "SELECT verkordid, artid, klantid, verkorddatum, verkordbestaantal, verkordstatus FROM verkooporders WHERE verkordid = :verkordid";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':verkordid', $verkordid);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            return $result;
-        } catch(PDOException $e) {
-            echo "Fout bij het ophalen van de verkooporder: " . $e->getMessage();
-        }
-    }
-
-    public function getKlantNaam($klantid) {
-        try {
-            $query = "SELECT klantNaam FROM klanten WHERE klantId = :klantid";
+            $query = "SELECT v.verkordid, v.artid, v.klantid, v.verkorddatum, v.verkordbestaantal, v.verkordstatus, a.artikelenomschrijving
+                      FROM verkooporders v
+                      INNER JOIN artikelen a ON v.artid = a.artId
+                      WHERE v.klantid = :klantid";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':klantid', $klantid);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            return $result['klantNaam'];
+            return $result;
         } catch(PDOException $e) {
-            echo "Fout bij het ophalen van de klantnaam: " . $e->getMessage();
+            echo "Fout bij het ophalen van de verkooporders: " . $e->getMessage();
         }
     }
 
-    public function getartikelenomschrijving($artid) {
+    public function getKlanten() {
         try {
-            $query = "SELECT artikelenomschrijving FROM artikelen WHERE artId = :artid";
+            $query = "SELECT klantId, klantNaam FROM klanten";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':artid', $artid);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            return $result['artikelenomschrijving'];
+            return $result;
         } catch(PDOException $e) {
-            echo "Fout bij het ophalen van de artikelenomschrijving: " . $e->getMessage();
+            echo "Fout bij het ophalen van de klanten: " . $e->getMessage();
         }
     }
 }
 
-$verkordid = $_GET['verkordid'] ?? '';
 $verkooporder = new Verkooporder($conn);
 
 // Zoekbalk logica
 if (isset($_POST['search'])) {
-    $verkordid = $_POST['verkordid'] ?? '';
-    $verkooporderData = $verkooporder->getVerkooporder($verkordid);
+    $klantid = $_POST['klantid'] ?? '';
+    $verkooporders = $verkooporder->getVerkoopordersByKlantId($klantid);
 
-    if ($verkooporderData) {
-        $klantid = $verkooporderData['klantid'];
-        $artid = $verkooporderData['artid'];
+    if (!empty($verkooporders)) {
+        echo "<table>
+                <tr>
+                    <th>Verkooporder ID</th>
+                    <th>Artikel ID</th>
+                    <th>Klant ID</th>
+                    <th>Verkoopdatum</th>
+                    <th>Besteld aantal</th>
+                    <th>Status</th>
+                    <th>Artikelomschrijving</th>
+                </tr>";
         
-        $klantNaam = $verkooporder->getKlantNaam($klantid);
-        $artikelenomschrijving = $verkooporder->getartikelenomschrijving($artid);
+        foreach ($verkooporders as $verkooporderData) {
+            echo "<tr>
+                    <td>" . $verkooporderData['verkordid'] . "</td>
+                    <td>" . $verkooporderData['artid'] . "</td>
+                    <td>" . $verkooporderData['klantid'] . "</td>
+                    <td>" . $verkooporderData['verkorddatum'] . "</td>
+                    <td>" . $verkooporderData['verkordbestaantal'] . "</td>
+                    <td>" . $verkooporderData['verkordstatus'] . "</td>
+                    <td>" . $verkooporderData['artikelenomschrijving'] . "</td>
+                </tr>";
+        }
 
-        echo "Verkooporder ID: " . $verkooporderData['verkordid'] . "<br>";
-        echo "Artikel ID: " . $verkooporderData['artid'] . "<br>";
-        echo "Klant ID: " . $verkooporderData['klantid'] . "<br>";
-        echo "Klantnaam: " . $klantNaam . "<br>";
-        echo "Verkoopdatum: " . $verkooporderData['verkorddatum'] . "<br>";
-        echo "Besteld aantal: " . $verkooporderData['verkordbestaantal'] . "<br>";
-        echo "Status: " . $verkooporderData['verkordstatus'] . "<br>";
-        echo "Artikelomschrijving: " . $artikelenomschrijving . "<br>";
+        echo "</table>";
     } else {
-        echo "Verkooporder met ID $verkordid niet gevonden.";
+        echo "Geen verkooporders gevonden voor de geselecteerde klant.";
     }
 }
+
+// Klanten ophalen voor het dropdown-menu
+$klanten = $verkooporder->getKlanten();
 ?>
 
 <!DOCTYPE html>
 <html>
 <body>
+    <?php
+    if (isset($_POST['search']) && isset($_POST['klantid'])) {
+        $selectedKlantId = $_POST['klantid'];
+        $selectedKlantNaam = '';
+        foreach ($klanten as $klant) {
+            if ($klant['klantId'] == $selectedKlantId) {
+                $selectedKlantNaam = $klant['klantNaam'];
+                break;
+            }
+        }
+        echo "<p>Klantnaam: $selectedKlantNaam</p>";
+    }
+    ?>
+
     <form method="POST" action="">
-        <input type="text" name="verkordid" placeholder="Verkooporder ID">
-        <input type="submit" name="search" value="Zoeken">
+
+        <label for="klantid">Klant:</label>
+        <select name="klantid" id="klantid" required>
+            <?php foreach ($klanten as $klant) { ?>
+                <option value="<?php echo $klant['klantId']; ?>"><?php echo $klant['klantNaam']; ?></option>
+            <?php } ?>
+        </select>
+        <br>
+        <br>
+        <input type="submit" name="search" value="Search">
     </form>
 
     <br>
