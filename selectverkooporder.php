@@ -22,6 +22,34 @@ class Verkooporder extends Config {
             echo "Fout bij het ophalen van de verkooporder: " . $e->getMessage();
         }
     }
+
+    public function getKlantNaam($klantid) {
+        try {
+            $query = "SELECT klantNaam FROM klanten WHERE klantId = :klantid";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':klantid', $klantid);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $result['klantNaam'];
+        } catch(PDOException $e) {
+            echo "Fout bij het ophalen van de klantnaam: " . $e->getMessage();
+        }
+    }
+
+    public function getartikelenomschrijving($artid) {
+        try {
+            $query = "SELECT artikelenomschrijving FROM artikelen WHERE artId = :artid";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':artid', $artid);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $result['artikelenomschrijving'];
+        } catch(PDOException $e) {
+            echo "Fout bij het ophalen van de artikelenomschrijving: " . $e->getMessage();
+        }
+    }
 }
 
 $verkordid = $_GET['verkordid'] ?? '';
@@ -33,12 +61,20 @@ if (isset($_POST['search'])) {
     $verkooporderData = $verkooporder->getVerkooporder($verkordid);
 
     if ($verkooporderData) {
+        $klantid = $verkooporderData['klantid'];
+        $artid = $verkooporderData['artid'];
+        
+        $klantNaam = $verkooporder->getKlantNaam($klantid);
+        $artikelenomschrijving = $verkooporder->getartikelenomschrijving($artid);
+
         echo "Verkooporder ID: " . $verkooporderData['verkordid'] . "<br>";
         echo "Artikel ID: " . $verkooporderData['artid'] . "<br>";
         echo "Klant ID: " . $verkooporderData['klantid'] . "<br>";
+        echo "Klantnaam: " . $klantNaam . "<br>";
         echo "Verkoopdatum: " . $verkooporderData['verkorddatum'] . "<br>";
         echo "Besteld aantal: " . $verkooporderData['verkordbestaantal'] . "<br>";
         echo "Status: " . $verkooporderData['verkordstatus'] . "<br>";
+        echo "Artikelomschrijving: " . $artikelenomschrijving . "<br>";
     } else {
         echo "Verkooporder met ID $verkordid niet gevonden.";
     }
