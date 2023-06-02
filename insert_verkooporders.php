@@ -1,6 +1,6 @@
 <?php
 include 'conn.php';
-include 'insertverkooporder.php';
+include 'verkooporder.php';
 
 // ... rest van de code ...
 
