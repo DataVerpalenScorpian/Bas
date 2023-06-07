@@ -2,95 +2,71 @@
 include 'conn.php';
 include 'Config.php';
 
-class Verkooporder extends Config {
+class Artikelen extends Config {
     private $conn;
 
     public function __construct($conn) {
         $this->conn = $conn;
     }
 
-    public function getVerkooporderArtikel($verkordid) {
+    public function getArtikelen() {
         try {
-            $query = "SELECT v.verkordid, v.artid, v.klantid, v.verkorddatum, v.verkordbestaantal, v.verkordstatus, a.artid, a.artikelenomschrijving, a.artinkoop, a.artverkoop, a.artvoorraad, a.artminvoorraad, a.artmaxvoorraad, a.artlocatie, a.levid
-                      FROM verkooporders v
-                      INNER JOIN artikelen a ON v.artid = a.artid
-                      WHERE v.verkordid = :verkordid";
+            $query = "SELECT artid, artikelenomschrijving, artinkoop, artverkoop, artvoorraad, artminvoorraad, artmaxvoorraad, artlocatie, levid FROM artikelen";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':verkordid', $verkordid);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $result;
         } catch(PDOException $e) {
-            echo "Fout bij het ophalen van de verkooporder: " . $e->getMessage();
+            echo "Fout bij het ophalen van de artikelen: " . $e->getMessage();
         }
     }
 }
 
-$verkooporder = new Verkooporder($conn);
+$artikelen = new Artikelen($conn);
 
-// Zoekbalk logica
-if (isset($_POST['search'])) {
-    $verkordid = $_POST['verkordid'] ?? '';
-    $verkooporderArtikel = $verkooporder->getVerkooporderArtikel($verkordid);
-
-    if (!empty($verkooporderArtikel)) {
-        echo "<table border='1'>
-                <tr>
-                    <th>Verkooporder ID</th>
-                    <th>Artikel ID</th>
-                    <th>Klant ID</th>
-                    <th>Datum</th>
-                    <th>Aantal</th>
-                    <th>Status</th>
-                    <th>Artikelomschrijving</th>
-                    <th>Inkoopprijs</th>
-                    <th>Verkoopprijs</th>
-                    <th>Voorraad</th>
-                    <th>Minimale voorraad</th>
-                    <th>Maximale voorraad</th>
-                    <th>Locatie ID</th>
-                    <th>Lev ID</th>
-                </tr>";
-
-        foreach ($verkooporderArtikel as $order) {
-            echo "<tr>
-                    <td>" . $order['verkordid'] . "</td>
-                    <td>" . $order['artid'] . "</td>
-                    <td>" . $order['klantid'] . "</td>
-                    <td>" . $order['verkorddatum'] . "</td>
-                    <td>" . $order['verkordbestaantal'] . "</td>
-                    <td>" . $order['verkordstatus'] . "</td>
-                    <td>" . $order['artikelenomschrijving'] . "</td>
-                    <td>" . $order['artinkoop'] . "</td>
-                    <td>" . $order['artverkoop'] . "</td>
-                    <td>" . $order['artvoorraad'] . "</td>
-                    <td>" . $order['artminvoorraad'] . "</td>
-                    <td>" . $order['artmaxvoorraad'] . "</
-
-td>
-                    <td>" . $order['artlocatie'] . "</td>
-                    <td>" . $order['levid'] . "</td>
-                </tr>";
-        }
-
-        echo "</table>";
-    } else {
-        echo "Geen artikelen gevonden voor de opgegeven verkooporder.";
-    }
-}
+// Artikelen ophalen
+$artikelData = $artikelen->getArtikelen();
 ?>
 
 <!DOCTYPE html>
 <html>
 <body>
-<h1>Zoek artikelen per verkooporder</h1>
-<form method="POST" action="">
-    <label for="verkordid">Verkooporder ID:</label>
-    <input type="text" name="verkordid" id="verkordid" required>
-    <input type="submit" name="search" value="Zoeken">
-</form>
+<h1>Artikelen weergeven</h1>
+
+<?php if (!empty($artikelData)) { ?>
+    <table border='1'>
+        <tr>
+            <th>Artikel ID</th>
+            <th>Omschrijving</th>
+            <th>Inkoop</th>
+            <th>Verkoop</th>
+            <th>Voorraad</th>
+            <th>Minimale Voorraad</th>
+            <th>Maximale Voorraad</th>
+            <th>Locatie</th>
+            <th>Lev ID</th>
+        </tr>
+        <?php foreach ($artikelData as $artikel) { ?>
+            <tr>
+                <td><?php echo $artikel['artid']; ?></td>
+                <td><?php echo $artikel['artikelenomschrijving']; ?></td>
+                <td><?php echo $artikel['artinkoop']; ?></td>
+                <td><?php echo $artikel['artverkoop']; ?></td>
+                <td><?php echo $artikel['artvoorraad']; ?></td>
+                <td><?php echo $artikel['artminvoorraad']; ?></td>
+                <td><?php echo $artikel['artmaxvoorraad']; ?></td>
+                <td><?php echo $artikel['artlocatie']; ?></td>
+                <td><?php echo $artikel['levid']; ?></td>
+            </tr>
+        <?php } ?>
+    </table>
+<?php } else {
+    echo "Geen artikelen gevonden.";
+} ?>
+
 <br>
+
 <a href='index.php'>Terug naar homepage</a>
 </body>
 </html>
