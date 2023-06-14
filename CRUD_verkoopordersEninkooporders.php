@@ -42,7 +42,6 @@ class Order {
             $stmt->bindParam(':inkordid', $inkordid);
             $stmt->execute();
 
-            echo "Inkooporder is bijgewerkt.";
             return true;
         } catch(PDOException $e) {
             echo "Fout bij het bijwerken van de inkooporder: " . $e->getMessage();
@@ -99,7 +98,6 @@ class Order {
             $stmt->bindParam(':verkordid', $verkordid);
             $stmt->execute();
 
-            echo "Verkooporder is bijgewerkt.";
             return true;
         } catch(PDOException $e) {
             echo "Fout bij het bijwerken van de verkooporder: " . $e->getMessage();
@@ -143,12 +141,12 @@ try {
             if (isset($_POST['delete'])) {
                 $deleted = $order->deleteInkoopOrder($inkordid);
                 if ($deleted) {
-                    // Toon een succesbericht of voer andere acties uit
+                    echo "Inkooporder is verwijderd.";
                 }
             } else {
                 $updated = $order->updateInkoopOrder($inkordid, $artid, $levid, $inkorddatum, $inkordbestaantal, $inkordstatus);
                 if ($updated) {
-                    // Toon een succesbericht of voer andere acties uit
+                    echo "Inkooporder is bijgewerkt.";
                 }
             }
         }
@@ -164,12 +162,12 @@ try {
             if (isset($_POST['delete'])) {
                 $deleted = $order->deleteVerkoopOrder($verkordid);
                 if ($deleted) {
-                    // Toon een succesbericht of voer andere acties uit
+                    echo "Verkooporder is verwijderd.";
                 }
             } else {
                 $updated = $order->updateVerkoopOrder($verkordid, $artid, $klantid, $verkorddatum, $verkordbestaantal, $verkordstatus);
                 if ($updated) {
-                    // Toon een succesbericht of voer andere acties uit
+                    echo "Verkooporder is bijgewerkt.";
                 }
             }
         }
