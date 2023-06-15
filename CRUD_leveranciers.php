@@ -33,7 +33,29 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     <title>Leveranciersbeheer</title>
     <link rel="stylesheet" type="text/css" href="bas.css">
     <style>
-        /* Add your CSS styles here */
+            table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -75,5 +97,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     }
     ?>
 
+    <br>
+    <a href="form_insert_leveranciers.php" class="button">Leverancier Toevoegen</a>
+    <br><br>
+    <a href="Index.php" class="button">Terug naar Homepage</a>
 </body>
 </html>

@@ -7,6 +7,31 @@ include 'insert_artikelen.php';
 <head>
     <title>Artikel toevoegen</title>
     <link rel="stylesheet" type="text/css" href="bas.css">
+    <style>
+            table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <h2>Artikel toevoegen</h2>
@@ -40,5 +65,9 @@ include 'insert_artikelen.php';
 
         <input type="submit" name="insert" value="Artikel toevoegen">
     </form>
+    <br><br>
+    <a href="CRUD_artikelen.php" class="button">Artikelenbeheer</a>
+    <br><br>
+    <a href="Index.php" class="button">Terug naar Homepage</a>
 </body>
 </html>

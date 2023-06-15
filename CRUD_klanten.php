@@ -120,6 +120,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     }
     ?>
 
+    <br>
+    <a href="search_klant.php" class="button">Search Klant</a>
+    <br><br>
+    <a href="Index.php" class="button">Terug naar Homepage</a>
 </body>
 </html>
 
