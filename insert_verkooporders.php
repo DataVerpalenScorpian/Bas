@@ -1,6 +1,5 @@
 <?php
 include 'verkooporder.php';
-
 ?>
 
 
@@ -8,6 +7,7 @@ include 'verkooporder.php';
 <html>
 <head>
     <title>Verkooporder</title>
+    <link rel="stylesheet" type="text/css" href="bas.css">
 </head>
 <body>
     <form method="POST" action="">

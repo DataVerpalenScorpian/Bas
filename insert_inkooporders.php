@@ -1,12 +1,12 @@
 <?php
 include_once 'inkooporder.php';
-
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Inkooporder formulier</title>
+    <link rel="stylesheet" type="text/css" href="bas.css">
 </head>
 <body>
     <h1>Inkooporder formulier</h1>
