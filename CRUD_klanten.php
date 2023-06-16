@@ -1,7 +1,7 @@
 <?php
-include 'conn.php';
-include 'Config.php';
-include 'classes/klant.php';
+require 'conn.php';
+require 'Config.php';
+require 'classes/klant.php';
 
 // Create an instance of the Klanten class
 $klanten = new Klanten();
@@ -70,24 +70,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     <?php
     if (isset($_GET['action']) && $_GET['action'] == 'update' && isset($_GET['id'])) {
         $klantid = $_GET['id'];
-        $sql = "SELECT * FROM klanten WHERE klantid = $klantid";
-        $result = $klanten->conn->query($sql);
+        $stmt = $klanten->conn->prepare("SELECT * FROM klanten WHERE klantid = :klantid");
+        $stmt->bindParam(':klantid', $klantid);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
+        if ($result) {
             ?>
             <form method="post" action="">
-                <input type="hidden" name="klantid" value="<?php echo $row['klantid']; ?>">
+                <input type="hidden" name="klantid" value="<?php echo $result['klantid']; ?>">
                 <label>Klantnaam:</label>
-                <input type="text" name="klantnaam" value="<?php echo $row['klantnaam']; ?>" required><br><br>
+                <input type="text" name="klantnaam" value="<?php echo $result['klantnaam']; ?>" required><br><br>
                 <label>Klant E-mail:</label>
-                <input type="email" name="klantemail" value="<?php echo $row['klantemail']; ?>" required><br><br>
+                <input type="email" name="klantemail" value="<?php echo $result['klantemail']; ?>" required><br><br>
                 <label>Klant Adres:</label>
-                <input type="text" name="klantadres" value="<?php echo $row['klantadres']; ?>" required><br><br>
+                <input type="text" name="klantadres" value="<?php echo $result['klantadres']; ?>" required><br><br>
                 <label>Klant Postcode:</label>
-                <input type="text" name="klantpostcode" value="<?php echo $row['klantpostcode']; ?>" required><br><br>
+                <input type="text" name="klantpostcode" value="<?php echo $result['klantpostcode']; ?>" required><br><br>
                 <label>Klant Woonplaats:</label>
-                <input type="text" name="klantwoonplaats" value="<?php echo $row['klantwoonplaats']; ?>" required><br><br>
+                <input type="text" name="klantwoonplaats" value="<?php echo $result['klantwoonplaats']; ?>" required><br><br>
                 <input type="submit" name="update" value="Klant bijwerken" class="button">
             </form>
             <?php
@@ -103,4 +104,3 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     <a href="Index.php" class="button">Terug naar Homepage</a>
 </body>
 </html>
-
