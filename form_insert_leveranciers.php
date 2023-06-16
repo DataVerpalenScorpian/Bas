@@ -60,7 +60,7 @@ include 'insert_leveranciers.php';
         <input type="submit" name="insertLeverancier" value="Leverancier toevoegen">
     </form>
     <br><br>
-    <a href="CRUD_artikelen.php" class="button">Artikelenbeheer</a>
+    <a href="CRUD_leveranciers.php" class="button">Leveranciersbeheer</a>
     <br><br>
     <a href="Index.php" class="button">Terug naar Homepage</a>
 </body>

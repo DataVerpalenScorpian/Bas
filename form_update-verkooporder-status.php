@@ -51,32 +51,9 @@ try {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Orders</title>
+    <title>Orderbeheer</title>
     <link rel="stylesheet" type="text/css" href="bas.css">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        .error {
-            color: red;
-        }
     </style>
 </head>
 <body>

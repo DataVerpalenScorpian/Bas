@@ -27,6 +27,10 @@ include_once 'inkooporder.php';
         <input type="text" name="inkordstatus" id="inkordstatus"><br><br>
 
         <input type="submit" name="insert" value="Inkooporder toevoegen">
-    </form>
+        <br><br>
+        <a href="form_update-verkooporder-status.php" class="button">Orderbeheer</a>
+        <br><br>
+        <a href="Index.php" class="button">Terug naar Homepage</a>
+        </form>
 </body>
 </html>

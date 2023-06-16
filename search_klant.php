@@ -62,5 +62,9 @@ $searchCustomer = new ZoekKlant();
         <input type="text" name="klantid" id="klantid">
         <input type="submit" value="Zoeken">
     </form>
+    <br><br>
+    <a href="CRUD_klanten.php" class="button">Klantbeheer</a>
+    <br><br>
+    <a href="Index.php" class="button">Terug naar Homepage</a>
 </body>
 </html>

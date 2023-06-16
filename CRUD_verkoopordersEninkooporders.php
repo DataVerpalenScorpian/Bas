@@ -1,7 +1,7 @@
 <?php
 include 'conn.php';
 include 'Config.php';
-include 'classes.php';
+include 'classes/order.php';
 
 try {
     $order = new Order($conn);
