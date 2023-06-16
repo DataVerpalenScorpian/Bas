@@ -1,7 +1,7 @@
 <?php
-include 'conn.php';
-include 'Config.php';
-include 'classes/artikel.php';
+require 'conn.php';
+require 'Config.php';
+require 'classes/artikel.php';
 
 // Create an instance of the Artikelen class
 $artikelen = new Artikelen();
@@ -47,11 +47,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     <?php
     if (isset($_GET['action']) && $_GET['action'] == 'update' && isset($_GET['id'])) {
         $artid = $_GET['id'];
-        $sql = "SELECT * FROM artikelen WHERE artid = $artid";
-        $result = $artikelen->conn->query($sql);
+        $row = $artikelen->getArtikelById($artid);
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
+        if ($row) {
             ?>
             <form method="post" action="">
                 <input type="hidden" name="artid" value="<?php echo $row['artid']; ?>">
@@ -86,4 +84,3 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     <a href="Index.php" class="button">Terug naar Homepage</a>
 </body>
 </html>
-
