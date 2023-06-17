@@ -1,5 +1,5 @@
 <?php
-include 'CRUD/CRUD_verkoopordersEninkooporders.php';
+include 'CRUD_verkoopordersEninkooporders.php';
 
 try {
     // ...
