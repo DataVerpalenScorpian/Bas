@@ -105,7 +105,6 @@
             <li><a href="CRUD_artikelen.php">Artikelen</a></li>
             <li><a href="CRUD_klanten.php">Klanten</a></li>
             <li><a href="CRUD_leveranciers.php">Leveranciers</a></li>
-            <li><a href="#">Contact</a></li>
         </ul>
 
         <div class="main-content">
