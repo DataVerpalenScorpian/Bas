@@ -100,7 +100,6 @@
         </div>
 
         <ul class="menu">
-            <li><a href="#">Home</a></li>
             <li><a href="form_update-verkooporder-status.php">Orders</a></li>
             <li><a href="CRUD_artikelen.php">Artikelen</a></li>
             <li><a href="CRUD_klanten.php">Klanten</a></li>
