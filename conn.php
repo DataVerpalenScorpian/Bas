@@ -1,5 +1,5 @@
 <?php
-// connect.php
+// Connection database
 
 class DatabaseConn {
     private $servername;
